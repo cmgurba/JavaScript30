@@ -9,8 +9,8 @@
 
 
   <div class="keys">
-    <div data-key="65" class="key">
-      <kbd>A</kbd>
+    <div data-key="65" class="key"> <!-- data attributes to tie divs to audio elements -->
+      <kbd>A</kbd> <!-- keycode.info : list of all key code events -->
       <span class="sound">clap</span>
     </div>
     <div data-key="83" class="key">
@@ -46,6 +46,30 @@
       <span class="sound">tink</span>
     </div>
   </div>
+
+  <script>
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); // http://www.cheetyr.com/css-selectors various ways to select by css properties
+    if (!audio) return; // stop on nonactive keys
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    audio.currentTime = 0; // rewind to start, allows mashing of longer audio sound
+    audio.play(); //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+    // same as jquery key.addClass()
+    key.classList.add('playing');
+  }
+
+  function removeTransition(e) {
+    // skip event if it's not a transform.. about 6 events fire from different propertyNames, just listen to 1
+    if(e.propertyName !== 'transform') return;
+    this.classList.remove('playing'); // this = key, arrow function gets `this` where it's called yay
+  }
+  // listen on each key for a transition end event.  This allows us to set up the
+  // ending transition without a setTimeout that needs to sync with the transition end CSS timing.
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  window.addEventListener('keydown', playSound); // listener on all keydown events to start
+  </script>
 
   <audio data-key="65" src="sounds/clap.wav"></audio>
   <audio data-key="83" src="sounds/hihat.wav"></audio>
