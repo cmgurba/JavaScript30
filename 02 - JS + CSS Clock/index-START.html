@@ -58,6 +58,10 @@
     .hand {
       width:50%;
       height:6px;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.5s;
+      transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
       background:black;
       position: absolute;
       top:50%;
@@ -66,7 +70,25 @@
   </style>
 
   <script>
+    const secondHand = document.querySelector('.second-hand');
+    const minuteHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
 
+    function setDate() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours();
+      const secondsDegrees = ((seconds / 60) * 360) + 90; // ratio of 360 degrees we need for second hand.
+      const minutesDegrees = ((minutes / 60) * 360) + 90; // the 90 is to match our offset above in the .hand class
+      const hoursDegrees = ((hours / 12) * 360) + 90;
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+      console.log(seconds);
+    }
+
+    setInterval(setDate, 1000);
 
   </script>
 </body>
