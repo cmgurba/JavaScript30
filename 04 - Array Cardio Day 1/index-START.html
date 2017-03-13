@@ -31,28 +31,69 @@
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
+    const fifteen = inventors.filter(inventor => inventor.year >= 1500 && inventor.year < 1600);
+    console.table(fifteen);
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors' first and last names
+    const fullNames = inventors.map(inventor => `${inventor.first} ${inventor.last}`);
+    console.log(fullNames);
 
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
-
+    const ordered = inventors.sort((a, b) =>
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+      // custom evaluation of sort.  return 1 if left 'a' item is bigger by some criteria,
+      // return -1 if left 'a' item is smaller by the criteria.
+      a.year > b.year ? 1 : -1
+    );
+    console.table(ordered);
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live?
-
+    const totalYears = inventors.reduce((total, inventor) => {
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+      // remember dummy, args are (accumulator, currentvalue, currentIndex, array)
+      // after callback you can also provide initialvalue, in which case first cycle
+      // of reduce takes that as accumulator and the first array item as currentvalue.
+      return total + (inventor.year - inventor.passed);
+    }, 0);
     // 5. Sort the inventors by years lived
-
+    const youngestToOldest = inventors.sort((a, b) => {
+      const lastAge = a.passed - a.year;
+      const nextAge = b.passed - b.year;
+      return lastAge > nextAge ? 1 : -1;
+    });
+    console.table(youngestToOldest);
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
-
-
+    // in console on wikipedia...
+    // const category = document.querySelector('.mw-category');
+    // const links = category.querySelectorAll('a');
+    // const de = Array.from(links).map(link => link.textContent).filter(street => street.includes('de'));
     // 7. sort Exercise
     // Sort the people alphabetically by last name
-
+    const alpha = people.sort((a, b) => {
+      // in this solution we keep it as an array of strings, just
+      // split/destructure inside the sort to properly compare last names.
+      const [aLast, aFirst] = a.split(', ');
+      const [bLast, bFirst] = b.split(', ');
+      return aLast > bLast ? 1 : -1;
+    });
+    console.log(alpha);
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+    const transportation = data.reduce((acc, current) => {
+      // initialization for a key... probably a cleaner way?
+      if(!acc[current]) {
+        acc[current] = 0;
+      }
+      acc[current]++;
+      // return the accumulator always.
+      return acc;
+    }, {});
+
+    console.log(transportation);
 
   </script>
 </body>
